@@ -1,0 +1,16 @@
+export const PUBLIC_DATA_API_KEY = import.meta.env.VITE_PUBLIC_DATA_API_KEY
+export const PUBLIC_DATA_DEFAULT_PAGE_SIZE = 100
+export const HIRA_HOSPITAL_LIST_PATH = '/api/hira/hospInfoServicev2/getHospBasisList'
+export const HIRA_DETAIL_PATH = '/api/hira/MadmDtlInfoService1/getDtlInfo2'
+export const TOUR_AREA_LIST_PATH = '/api/tour/KorService2/areaBasedList2'
+export const TOUR_AREA_CODE_PATH = '/api/tour/KorService2/areaCode2'
+export const TOUR_FESTIVAL_PATH = '/api/tour/KorService2/searchFestival2'
+export const VISITOR_REGION_PATH = '/api/tour/DataLabService/locgoRegnVisitrDDList'
+export const KMA_SHORT_FORECAST_PATH = '/api/weather/VilageFcstInfoService_2.0/getVilageFcst'
+export const APARTMENT_RENT_PATH = '/api/housing/RTMSDataSvcAptRent/getRTMSDataSvcAptRent'
+export const OFFICETEL_RENT_PATH = '/api/housing/RTMSDataSvcOffiRent/getRTMSDataSvcOffiRent'
+export const PHARMACY_LIST_PATH = '/api/pharmacy/ErmctInsttInfoInqireService/getParmacyListInfoInqire'
+export const FESTIVAL_STANDARD_PATH = '/api/standard/tn_pubr_public_cltur_fstvl_api'
+export const RURAL_EXPERIENCE_PATH = '/api/standard/tn_pubr_public_frhl_exprn_vilage_api'
+export const LIBRARY_STANDARD_PATH = '/api/standard/tn_pubr_public_lbrry_api'
+export const TOURISM_STANDARD_PATH = '/api/standard/tn_pubr_public_trrsrt_api'

@@ -1,0 +1,2 @@
+export type PharmacyApiItem = { dutyName?: string; dutyAddr?: string; dutyTel1?: string; wgs84Lat?: string; wgs84Lon?: string; hpid?: string }
+export type PharmacyApiResponse = { response?: { header?: { resultCode?: string; resultMsg?: string }; body?: { items?: { item?: PharmacyApiItem | PharmacyApiItem[] } } } }

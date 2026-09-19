@@ -1,0 +1,7 @@
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import type { UserProfile } from '../types/user'
+const defaultProfile: UserProfile = { nickname: '살아봄러', ageGroup: '20대', residence: '서울특별시', stayDuration: '2~4주', interests: ['자연', '카페', '워케이션'], lifestyleType: '워케이션형' }
+type AppState = { profile: UserProfile; setProfile: (profile: UserProfile) => void; savedIds: string[]; toggleSaved: (id: string) => void }
+const AppContext = createContext<AppState | null>(null)
+export function AppProvider({ children }: { children: ReactNode }) { const [profile, setProfileState] = useState<UserProfile>(() => JSON.parse(localStorage.getItem('salabom-profile') ?? 'null') ?? defaultProfile); const [savedIds, setSavedIds] = useState<string[]>(() => JSON.parse(localStorage.getItem('salabom-saved') ?? '[]')); const setProfile = (value: UserProfile) => setProfileState(value); const toggleSaved = (id: string) => setSavedIds((ids) => ids.includes(id) ? ids.filter((saved) => saved !== id) : [...ids, id]); useEffect(() => localStorage.setItem('salabom-profile', JSON.stringify(profile)), [profile]); useEffect(() => localStorage.setItem('salabom-saved', JSON.stringify(savedIds)), [savedIds]); return <AppContext.Provider value={{ profile, setProfile, savedIds, toggleSaved }}>{children}</AppContext.Provider> }
+export function useApp() { const context = useContext(AppContext); if (!context) throw new Error('AppProvider is required'); return context }

@@ -1,0 +1,2 @@
+export type KmaForecastItem = { category?: string; fcstDate?: string; fcstTime?: string; fcstValue?: string }
+export type KmaForecastResponse = { response?: { header?: { resultCode?: string; resultMsg?: string }; body?: { items?: { item?: KmaForecastItem | KmaForecastItem[] } } } }

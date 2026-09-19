@@ -1,0 +1,1 @@
+export type UserProfile = { nickname: string; ageGroup: string; residence: string; stayDuration: string; interests: string[]; lifestyleType: string }

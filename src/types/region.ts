@@ -1,0 +1,4 @@
+export type LivingSuitability = { overall: number; housing: number; transport: number; medical: number; internet: number; infrastructure: number; nature: number; workation: number; localPrograms: number; culture: number }
+export type BudgetLine = { label: string; monthly: number }
+export type LivingInfo = { carFree: string; medical: string; groceries: string; nightlife: string; difficulty: string; drawback: string; recommended: string; notRecommended: string }
+export type Region = { id: string; province: string; city: string; heroImage: string; tags: string[]; stayDuration: string; monthlyCost: number; suitability: LivingSuitability; budget: BudgetLine[]; livingInfo: LivingInfo }
