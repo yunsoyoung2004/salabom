@@ -1,0 +1,34 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    {
+      "source": "/api/hira/:rest*",
+      "destination": "https://apis.data.go.kr/B551182/:rest*"
+    },
+    {
+      "source": "/api/tour/:rest*",
+      "destination": "https://apis.data.go.kr/B551011/:rest*"
+    },
+    {
+      "source": "/api/weather/:rest*",
+      "destination": "https://apis.data.go.kr/1360000/:rest*"
+    },
+    {
+      "source": "/api/housing/:rest*",
+      "destination": "https://apis.data.go.kr/1613000/:rest*"
+    },
+    {
+      "source": "/api/pharmacy/:rest*",
+      "destination": "https://apis.data.go.kr/B552657/:rest*"
+    },
+    {
+      "source": "/api/standard/:rest*",
+      "destination": "https://api.data.go.kr/openapi/:rest*"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
