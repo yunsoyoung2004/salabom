@@ -1,34 +1,52 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/hira/:rest*",
-      "destination": "https://apis.data.go.kr/B551182/:rest*"
+      "src": "/api/hira/(.*)",
+      "dest": "https://apis.data.go.kr/B551182/$1",
+      "headers": {
+        "Access-Control-Allow-Origin": "*"
+      }
     },
     {
-      "source": "/api/tour/:rest*",
-      "destination": "https://apis.data.go.kr/B551011/:rest*"
+      "src": "/api/tour/(.*)",
+      "dest": "https://apis.data.go.kr/B551011/$1",
+      "headers": {
+        "Access-Control-Allow-Origin": "*"
+      }
     },
     {
-      "source": "/api/weather/:rest*",
-      "destination": "https://apis.data.go.kr/1360000/:rest*"
+      "src": "/api/weather/(.*)",
+      "dest": "https://apis.data.go.kr/1360000/$1",
+      "headers": {
+        "Access-Control-Allow-Origin": "*"
+      }
     },
     {
-      "source": "/api/housing/:rest*",
-      "destination": "https://apis.data.go.kr/1613000/:rest*"
+      "src": "/api/housing/(.*)",
+      "dest": "https://apis.data.go.kr/1613000/$1",
+      "headers": {
+        "Access-Control-Allow-Origin": "*"
+      }
     },
     {
-      "source": "/api/pharmacy/:rest*",
-      "destination": "https://apis.data.go.kr/B552657/:rest*"
+      "src": "/api/pharmacy/(.*)",
+      "dest": "https://apis.data.go.kr/B552657/$1",
+      "headers": {
+        "Access-Control-Allow-Origin": "*"
+      }
     },
     {
-      "source": "/api/standard/:rest*",
-      "destination": "https://api.data.go.kr/openapi/:rest*"
+      "src": "/api/standard/(.*)",
+      "dest": "https://api.data.go.kr/openapi/$1",
+      "headers": {
+        "Access-Control-Allow-Origin": "*"
+      }
     },
     {
-      "source": "/((?!api/).*)",
-      "destination": "/index.html"
+      "src": "^/(?!api/).*",
+      "dest": "/index.html"
     }
   ]
 }
