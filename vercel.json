@@ -1,50 +1,17 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "routes": [
-    {
-      "src": "/api/hira/(.*)",
-      "dest": "https://apis.data.go.kr/B551182/$1"
-    },
-    {
-      "src": "/api/tour/(.*)",
-      "dest": "https://apis.data.go.kr/B551011/$1"
-    },
-    {
-      "src": "/api/weather/(.*)",
-      "dest": "https://apis.data.go.kr/1360000/$1"
-    },
-    {
-      "src": "/api/housing/(.*)",
-      "dest": "https://apis.data.go.kr/1613000/$1"
-    },
-    {
-      "src": "/api/pharmacy/(.*)",
-      "dest": "https://apis.data.go.kr/B552657/$1"
-    },
-    {
-      "src": "/api/standard/(.*)",
-      "dest": "https://api.data.go.kr/openapi/$1"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
-    },
-    {
-      "src": "/favicon.svg",
-      "dest": "/favicon.svg"
-    },
-    {
-      "src": "/icons.svg",
-      "dest": "/icons.svg"
-    },
-    {
-      "src": "/index.html",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+  "functions": {
+    "api/**/*.ts": {
+      "runtime": "nodejs20.x"
     }
+  },
+  "rewrites": [
+    { "source": "/api/hira/:path*", "destination": "https://apis.data.go.kr/B551182/:path*" },
+    { "source": "/api/tour/:path*", "destination": "https://apis.data.go.kr/B551011/:path*" },
+    { "source": "/api/weather/:path*", "destination": "https://apis.data.go.kr/1360000/:path*" },
+    { "source": "/api/housing/:path*", "destination": "https://apis.data.go.kr/1613000/:path*" },
+    { "source": "/api/pharmacy/:path*", "destination": "https://apis.data.go.kr/B552657/:path*" },
+    { "source": "/api/standard/:path*", "destination": "https://api.data.go.kr/openapi/:path*" }
   ]
 }
