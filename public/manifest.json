@@ -1,0 +1,34 @@
+{
+  "name": "살아봄 - 지역별 생활 정보",
+  "short_name": "살아봄",
+  "description": "살을 경험하는 새로운 방식. 지역별 의료, 주거, 문화 정보를 종합적으로 제공합니다.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#3ba951",
+  "background_color": "#ffffff",
+  "categories": ["lifestyle", "reference"],
+  "screenshots": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    }
+  ],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
