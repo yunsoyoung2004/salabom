@@ -1,4 +1,12 @@
 {
   "buildCommand": "",
-  "outputDirectory": "dist"
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/api/hira/:path*", "destination": "https://apis.data.go.kr/B551182/:path*" },
+    { "source": "/api/tour/:path*", "destination": "https://apis.data.go.kr/B551011/:path*" },
+    { "source": "/api/weather/:path*", "destination": "https://apis.data.go.kr/1360000/:path*" },
+    { "source": "/api/housing/:path*", "destination": "https://apis.data.go.kr/1613000/:path*" },
+    { "source": "/api/pharmacy/:path*", "destination": "https://apis.data.go.kr/B552657/:path*" },
+    { "source": "/api/standard/:path*", "destination": "https://api.data.go.kr/openapi/:path*" }
+  ]
 }
