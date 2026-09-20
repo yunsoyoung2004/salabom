@@ -5,7 +5,7 @@ import type { LocalProgram, Festival, Library } from '../types/datasets'
 import { livingScores } from '../services/suitabilityService'
 import { formatWon } from '../services/budgetService'
 import { useState } from 'react'
-import { X, MapPin, Phone, Globe, Calendar, BookOpen, Users } from 'lucide-react'
+import { X, MapPin, Phone, Globe, BookOpen, Users } from 'lucide-react'
 
 const labels: Record<string,string> = {live:'공공데이터 연동', empty:'등록 정보 없음', fallback:'일부 자료만 반영', error:'불러오기 실패', blocked_endpoint:'제공처 연결 불가', api_response_mismatch:'응답 형식 확인 필요'}
 const sourceLabel = (source?: string) => labels[source ?? ''] ?? '불러오는 중'
