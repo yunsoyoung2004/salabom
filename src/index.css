@@ -1,18 +1,19 @@
 @import 'tailwindcss';
 
 :root { --page-gutter: 18px; font-family: Pretendard, "Noto Sans KR", system-ui, sans-serif; color: #1c1c1c; background: #eef1ee; font-synthesis: none; text-rendering: optimizeLegibility; }
+html { width: 100%; height: 100%; }
+body { width: 100%; height: 100%; min-width: 320px; margin: 0; padding: 0; display: block; background: #fff; }
+#root { display: flex; width: 100%; height: 100%; min-height: 100dvh; }
 * { box-sizing: border-box; }
-html, body { width: 100%; height: 100%; min-width: 320px; margin: 0; padding: 0; }
-body { display: block; }
-#root { width: 100%; min-width: 320px; min-height: 100dvh; }
 button, input { font: inherit; }
 button { cursor: pointer; border: 0; }
 img { display: block; width: 100%; object-fit: cover; }
 
-.app-frame { width: 100%; max-width: min(100%, 390px); min-height: 100svh; height: 100svh; margin: 0 auto; position: relative; overflow: hidden; background: #fff; box-shadow: 0 2px 20px rgba(22, 38, 24, .08); }
-@media (min-width: 600px) { .app-frame { width: 100%; max-width: 100%; height: auto; min-height: auto; overflow: visible; border-radius: 0; box-shadow: none; margin: 0; } body { background: #fff; } }
-@media (min-width: 1024px) { .app-frame { width: 100%; } .page { padding: 28px 32px 40px; } }
-.app-scroll { position: relative; height: 100%; overflow-y: auto; scrollbar-width: none; background: #fff; }
+.app-frame { display: flex; flex-direction: column; width: 100%; max-width: 100%; min-height: 100svh; height: 100svh; margin: 0 auto; position: relative; background: #fff; box-shadow: none; overflow: hidden; }
+@media (max-width: 599px) { .app-frame { max-width: 390px; } }
+@media (min-width: 600px) { .app-frame { max-width: 100%; height: auto; min-height: 100vh; overflow: visible; } }
+@media (min-width: 1024px) { .page { padding: 28px 32px 40px; } }
+.app-scroll { flex: 1; position: relative; overflow-y: auto; scrollbar-width: none; background: #fff; width: 100%; }
 .app-scroll::-webkit-scrollbar { display: none; }
 .app-scroll:has(.splash) { overflow-y: hidden; }
 .with-nav { padding-bottom: 74px; }
