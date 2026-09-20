@@ -478,7 +478,7 @@ export function Compare() {
 export function RegionDetail() {
   const navigate = useNavigate();
   const { id = "gangneung" } = useParams();
-  const { savedIds, toggleSaved } = useApp();
+  const { savedIds, toggleSaved, profile } = useApp();
   const region = regions.find((item) => item.id === id) ?? regions[0];
   const livingData = useRegionLivingData(region);
   const [tab, setTab] = useState("숙소");
@@ -579,7 +579,7 @@ export function RegionDetail() {
           ) : tab === "체험 프로그램" || tab === "생활 인프라" ? (
             <LocalPrograms data={livingData} libraries={tab === "생활 인프라"} />
           ) : tab === "즐길거리" ? (
-            <RegionalAttractions data={livingData} />
+            <RegionalAttractions data={livingData} profile={profile} />
           ) : (
             <>
               <div className="section-title">

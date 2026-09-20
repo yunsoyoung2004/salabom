@@ -6,6 +6,7 @@ import { livingScores } from '../services/suitabilityService'
 import { formatWon } from '../services/budgetService'
 import { useState } from 'react'
 import { X, MapPin, Phone, Globe, BookOpen, Users } from 'lucide-react'
+import { getRecommendedAttractions } from '../utils/recommendationEngine'
 
 const labels: Record<string,string> = {live:'공공데이터 연동', empty:'등록 정보 없음', fallback:'일부 자료만 반영', error:'불러오기 실패', blocked_endpoint:'제공처 연결 불가', api_response_mismatch:'응답 형식 확인 필요'}
 const sourceLabel = (source?: string) => labels[source ?? ''] ?? '불러오는 중'
@@ -194,17 +195,18 @@ function AttractionModal({place, onClose}: {place:Poi | null; onClose:()=>void})
   </div>
 }
 
-function AttractionRows({title, places}: {title:string; places:Poi[] | undefined}) {
+function AttractionRows({title, places, profile}: {title:string; places:Poi[] | undefined; profile?: any}) {
   const [selectedPlace, setSelectedPlace] = useState<Poi | null>(null)
+  const filteredPlaces = profile && places ? getRecommendedAttractions(profile, places) : places
 
   return <section className="program-section">
     <div className="section-title">
       <h2>{title}</h2>
       <small>{places && places.length > 0 ? '한국관광공사 TourAPI' : '정보를 불러오는 중'}</small>
     </div>
-    {!places || places.length === 0 ? <p className="empty-state">등록된 관광 정보가 없습니다.</p> : (
+    {!filteredPlaces || filteredPlaces.length === 0 ? <p className="empty-state">등록된 관광 정보가 없습니다.</p> : (
       <div className="attraction-grid">
-        {places.map(place => <AttractionCard key={place.id} place={place} onSelect={setSelectedPlace} />)}
+        {filteredPlaces.map(place => <AttractionCard key={place.id} place={place} onSelect={setSelectedPlace} />)}
       </div>
     )}
     <AttractionModal place={selectedPlace} onClose={() => setSelectedPlace(null)} />
@@ -216,6 +218,6 @@ export function LocalPrograms({data, libraries = false, activeOnly = false}: {da
   return <><ProgramRows title="지역 문화축제" source={festival}/><ProgramRows title="농어촌 체험 프로그램" source={data?.ruralExperience}/>{libraries && <ProgramRows title="도서관 · 업무환경 참고" source={data?.library}/>}</>
 }
 
-export function RegionalAttractions({data}: {data:RegionLivingData | null}) {
-  return <AttractionRows title="지역 즐길거리" places={data?.tourism.data} />
+export function RegionalAttractions({data, profile}: {data:RegionLivingData | null; profile?: any}) {
+  return <AttractionRows title="지역 즐길거리" places={data?.tourism.data} profile={profile} />
 }
