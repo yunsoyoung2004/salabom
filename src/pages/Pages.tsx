@@ -1,5 +1,5 @@
 import { ActivityValue, HousingValue, SuitabilityValue, RegionalMetrics, LocalPrograms, RegionalAttractions } from '../components/RegionalData';
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getRecommendedRegions, filterByCategory } from '../utils/recommendationEngine';
 import {
   Bell,
@@ -13,7 +13,6 @@ import {
   Heart,
   MessageCircle,
   MoreHorizontal,
-  Navigation,
   Plus,
   Settings,
   Star,
@@ -700,22 +699,68 @@ export function Itinerary() {
 export function MapPage() {
   const [preset, setPreset] = useState("전체");
   const [selectedMarker, setSelectedMarker] = useState<number | null>(null);
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<any>(null);
+  const markersRef = useRef<any[]>([]);
+
   const livingData = useRegionLivingData(regions[0]);
   const livePharmacies = livingData?.pharmacies.data ?? [];
   const liveTourism = livingData?.tourism.data ?? [];
   const liveLibraries = livingData?.library.data ?? [];
 
   const renderedPlaces =
-    preset === "생활" ? livePharmacies.slice(0, 3) :
-    preset === "일" ? liveLibraries.slice(0, 3) :
-    preset === "관광" ? liveTourism.slice(0, 3) :
-    [...livePharmacies.slice(0, 1), ...liveLibraries.slice(0, 1), ...liveTourism.slice(0, 1)];
+    preset === "생활" ? livePharmacies.slice(0, 5) :
+    preset === "일" ? liveLibraries.slice(0, 5) :
+    preset === "관광" ? liveTourism.slice(0, 5) :
+    [...livePharmacies.slice(0, 2), ...liveLibraries.slice(0, 2), ...liveTourism.slice(0, 1)];
 
-  const markerPositions = [
-    [62, 344],
-    [162, 204],
-    [224, 60],
-  ];
+  useEffect(() => {
+    if (!mapContainer.current) return;
+
+    const container = mapContainer.current;
+    const options = {
+      center: new (window as any).kakao.maps.LatLng(37.2411, 129.0538),
+      level: 5,
+    };
+
+    const map = new (window as any).kakao.maps.Map(container, options);
+    mapRef.current = map;
+
+    markersRef.current.forEach((marker) => marker.setMap(null));
+    markersRef.current = [];
+
+    renderedPlaces.forEach((place: any, index: number) => {
+      if (!place.latitude || !place.longitude) return;
+
+      const markerPosition = new (window as any).kakao.maps.LatLng(
+        place.latitude,
+        place.longitude
+      );
+
+      const markerImage = new (window as any).kakao.maps.MarkerImage(
+        `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='40' viewBox='0 0 32 40'%3E%3Cpath fill='%2335a55a' d='M16 0C9.4 0 4 5.4 4 12c0 8 12 28 12 28s12-20 12-28c0-6.6-5.4-12-12-12z'/%3E%3Ctext x='16' y='16' text-anchor='middle' dy='.3em' font-size='12' font-weight='bold' fill='white'%3E${index + 1}%3C/text%3E%3C/svg%3E`,
+        new (window as any).kakao.maps.Size(32, 40)
+      );
+
+      const marker = new (window as any).kakao.maps.Marker({
+        position: markerPosition,
+        image: markerImage,
+        title: place.name,
+      });
+
+      const infowindow = new (window as any).kakao.maps.InfoWindow({
+        content: `<div style="padding:8px;font-size:12px;"><strong>${place.name}</strong><br/>${place.address || '주소 정보 없음'}<br/>${place.phone ? `📞 ${place.phone}` : ''}</div>`,
+      });
+
+      marker.setMap(map);
+      markersRef.current.push(marker);
+
+      (window as any).kakao.maps.event.addListener(marker, "click", () => {
+        infowindow.open(map, marker);
+        setSelectedMarker(index);
+      });
+    });
+  }, [renderedPlaces]);
 
   return (
     <AppFrame>
@@ -737,48 +782,14 @@ export function MapPage() {
             </button>
           ))}
         </div>
-        <div className="map-canvas">
-          <div className="map-water" />
-          <div className="road road-one" />
-          <div className="road road-two" />
-          <svg className="route" viewBox="0 0 300 440" aria-hidden="true">
-            <path d="M62 344 C 82 275, 169 313, 162 204 S 241 125, 224 60" />
-          </svg>
-          {renderedPlaces.slice(0, 3).map((place: any, index: number) => {
-            const [left, top] = markerPositions[index];
-            const isSelected = selectedMarker === index;
-            return (
-              <div key={index}>
-                <span
-                  className={`map-marker ${isSelected ? "active" : ""}`}
-                  style={{ left: Number(left), top: Number(top) }}
-                  onClick={() => setSelectedMarker(isSelected ? null : index)}
-                  role="button"
-                  tabIndex={0}
-                >
-                  {index + 1}
-                </span>
-                {isSelected && (
-                  <div className="marker-popup" style={{ left: Number(left), top: Number(top) }}>
-                    <h4>{place.name}</h4>
-                    <p>{place.address || '주소 정보 없음'}</p>
-                    {place.phone && <p>📞 {place.phone}</p>}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-          <div className="map-controls">
-            <button aria-label="현재 위치">
-              <Navigation size={16} />
-            </button>
-            <button aria-label="확대">+</button>
-            <button aria-label="축소">−</button>
-          </div>
-        </div>
+        <div
+          ref={mapContainer}
+          className="map-canvas"
+          style={{ height: "300px", width: "100%", borderRadius: "9px" }}
+        />
         <details><summary>지역 프로그램 · 도서관 위치</summary><LocalPrograms data={livingData} libraries activeOnly /></details>
         <div className="place-list">
-          {renderedPlaces.slice(0, 3).map((place: any, index: number) => (
+          {renderedPlaces.slice(0, 5).map((place: any, index: number) => (
             <div
               key={place.id || index}
               className={`place-row-interactive ${selectedMarker === index ? "active" : ""}`}
