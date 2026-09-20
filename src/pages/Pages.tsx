@@ -497,6 +497,45 @@ export function RegionDetail() {
   const liked = likedIds.includes(region.id);
   const budget = getBudget(region, duration);
   const total = budget.reduce((sum, item) => sum + item.monthly, 0);
+  const mapContainer = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (!mapContainer.current || mapRef.current) return;
+
+    const regionCoords: Record<string, [number, number]> = {
+      gangneung: [37.2411, 129.0538],
+      sokcho: [38.2075, 128.5920],
+      jeonju: [35.8242, 127.1477],
+      gwangju: [35.1595, 126.8526],
+      busan: [35.1796, 129.0756],
+    };
+
+    const coords = regionCoords[region.id] || [37.2411, 129.0538];
+
+    const container = mapContainer.current;
+    const options = {
+      center: new (window as any).kakao.maps.LatLng(coords[0], coords[1]),
+      level: 4,
+    };
+
+    const map = new (window as any).kakao.maps.Map(container, options);
+    mapRef.current = map;
+
+    const markerPosition = new (window as any).kakao.maps.LatLng(coords[0], coords[1]);
+
+    const marker = new (window as any).kakao.maps.Marker({
+      position: markerPosition,
+    });
+
+    marker.setMap(map);
+
+    const infowindow = new (window as any).kakao.maps.InfoWindow({
+      content: `<div style="padding:8px;font-size:12px;"><strong>${region.city}</strong><br/>${region.province}</div>`,
+    });
+
+    infowindow.open(map, marker);
+  }, [region]);
   return (
     <AppFrame>
       <PageMotion className="region-detail">
@@ -535,6 +574,10 @@ export function RegionDetail() {
             </span>
           </div>
         </div>
+        <div
+          ref={mapContainer}
+          style={{ height: "200px", width: "100%", margin: "0 0 16px 0" }}
+        />
         <div className="detail-content">
           <h1>
             {region.province} {region.city}
