@@ -28,7 +28,6 @@ import {
   BackHeader,
   Chip,
   PageMotion,
-  PlaceRow,
   StatCard,
   StayCard,
 } from "../components/UI";
@@ -700,15 +699,24 @@ export function Itinerary() {
 
 export function MapPage() {
   const [preset, setPreset] = useState("전체");
+  const [selectedMarker, setSelectedMarker] = useState<number | null>(null);
   const livingData = useRegionLivingData(regions[0]);
   const livePharmacies = livingData?.pharmacies.data ?? [];
   const liveTourism = livingData?.tourism.data ?? [];
   const liveLibraries = livingData?.library.data ?? [];
 
   const renderedPlaces =
-    preset === "생활" ? livePharmacies.slice(0, 3).map((p: any) => p.name) :
-    preset === "일" ? liveLibraries.slice(0, 3).map((l: any) => l.name) :
-    liveTourism.slice(0, 3).map((t: any) => t.name);
+    preset === "생활" ? livePharmacies.slice(0, 3) :
+    preset === "일" ? liveLibraries.slice(0, 3) :
+    preset === "관광" ? liveTourism.slice(0, 3) :
+    [...livePharmacies.slice(0, 1), ...liveLibraries.slice(0, 1), ...liveTourism.slice(0, 1)];
+
+  const markerPositions = [
+    [62, 344],
+    [162, 204],
+    [224, 60],
+  ];
+
   return (
     <AppFrame>
       <PageMotion className="page map-page">
@@ -722,7 +730,7 @@ export function MapPage() {
           {tabLabels.map((label) => (
             <button
               className={`chip ${preset === label ? "chip-active" : ""}`}
-              onClick={() => setPreset(label)}
+              onClick={() => { setPreset(label); setSelectedMarker(null); }}
               key={label}
             >
               {label}
@@ -736,19 +744,30 @@ export function MapPage() {
           <svg className="route" viewBox="0 0 300 440" aria-hidden="true">
             <path d="M62 344 C 82 275, 169 313, 162 204 S 241 125, 224 60" />
           </svg>
-          {renderedPlaces.slice(0, 3).map((_: any, index: number) => [
-            [62, 344, "1"],
-            [162, 204, "2"],
-            [224, 60, "3"],
-          ][index]).map(([left, top, number]: any[]) => (
-            <span
-              className="map-marker"
-              style={{ left: Number(left), top: Number(top) }}
-              key={number}
-            >
-              {number}
-            </span>
-          ))}
+          {renderedPlaces.slice(0, 3).map((place: any, index: number) => {
+            const [left, top] = markerPositions[index];
+            const isSelected = selectedMarker === index;
+            return (
+              <div key={index}>
+                <span
+                  className={`map-marker ${isSelected ? "active" : ""}`}
+                  style={{ left: Number(left), top: Number(top) }}
+                  onClick={() => setSelectedMarker(isSelected ? null : index)}
+                  role="button"
+                  tabIndex={0}
+                >
+                  {index + 1}
+                </span>
+                {isSelected && (
+                  <div className="marker-popup" style={{ left: Number(left), top: Number(top) }}>
+                    <h4>{place.name}</h4>
+                    <p>{place.address || '주소 정보 없음'}</p>
+                    {place.phone && <p>📞 {place.phone}</p>}
+                  </div>
+                )}
+              </div>
+            );
+          })}
           <div className="map-controls">
             <button aria-label="현재 위치">
               <Navigation size={16} />
@@ -757,14 +776,22 @@ export function MapPage() {
             <button aria-label="축소">−</button>
           </div>
         </div>
-        <details><summary>지역 프로그램 · 도서관 위치</summary><LocalPrograms data={livingData} libraries activeOnly /></details><div className="place-list">
-          {renderedPlaces.map((place, index) => (
-            <PlaceRow
-              number={index + 1}
-              name={place}
-              image={[images.cafe, images.room, images.market][index]}
-              key={place}
-            />
+        <details><summary>지역 프로그램 · 도서관 위치</summary><LocalPrograms data={livingData} libraries activeOnly /></details>
+        <div className="place-list">
+          {renderedPlaces.slice(0, 3).map((place: any, index: number) => (
+            <div
+              key={place.id || index}
+              className={`place-row-interactive ${selectedMarker === index ? "active" : ""}`}
+              onClick={() => setSelectedMarker(selectedMarker === index ? null : index)}
+              role="button"
+              tabIndex={0}
+            >
+              <span className="place-number">{index + 1}</span>
+              <div className="place-info">
+                <p className="place-name">{place.name}</p>
+                <p className="place-address">{place.address || place.category || '정보 없음'}</p>
+              </div>
+            </div>
           ))}
         </div>
       </PageMotion>
