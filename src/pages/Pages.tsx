@@ -1,4 +1,4 @@
-import { ActivityValue, HousingValue, SuitabilityValue, RegionalMetrics, LocalPrograms } from '../components/RegionalData';
+import { ActivityValue, HousingValue, SuitabilityValue, RegionalMetrics, LocalPrograms, RegionalAttractions } from '../components/RegionalData';
 import { useState } from "react";
 import { getRecommendedRegions, filterByCategory } from '../utils/recommendationEngine';
 import {
@@ -579,11 +579,7 @@ export function RegionDetail() {
           ) : tab === "체험 프로그램" || tab === "생활 인프라" ? (
             <LocalPrograms data={livingData} libraries={tab === "생활 인프라"} />
           ) : tab === "즐길거리" ? (
-            <>
-              <div className="section-title"><h2>지역 즐길거리</h2><small>{livingData?.tourism.source === "live" ? "한국관광공사 TourAPI" : "정보를 불러오는 중"}</small></div>
-              {(livingData?.tourism.data ?? []).slice(0, 5).map((place) => <StayCard key={place.id} name={place.name} price={place.category} rating={place.address ?? "주소 정보 없음"} image={place.image || region.heroImage} tags={[place.category]} compact />)}
-              {livingData?.tourism.source === "empty" && <p>등록된 관광 정보가 없습니다.</p>}
-            </>
+            <RegionalAttractions data={livingData} />
           ) : (
             <>
               <div className="section-title">
