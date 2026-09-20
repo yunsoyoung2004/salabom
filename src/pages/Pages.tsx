@@ -255,6 +255,7 @@ export function Home() {
   const { profile } = useApp();
   const [selected, setSelected] = useState<string[]>([]);
   const [explanation, setExplanation] = useState<string | null>(null);
+  const [showNotification, setShowNotification] = useState(false);
   const recommendedRegions = getRecommendedRegions(profile, regions, 3);
   const toggle = (id: string) =>
     setSelected((items) =>
@@ -274,8 +275,20 @@ export function Home() {
             </h1>
             <p>AI가 분석한 당신의 {profile.lifestyleType} 스타일에 맞는 지역이에요</p>
           </div>
-          <Bell size={18} />
+          <button
+            className="icon-button"
+            onClick={() => setShowNotification(!showNotification)}
+            aria-label="알림"
+          >
+            <Bell size={18} />
+          </button>
         </header>
+        {showNotification && (
+          <div className="toast-notification">
+            <p>✨ 새로운 지역 추천이 있어요!</p>
+            <small>당신의 스타일에 맞는 3개 지역이 추천되었습니다.</small>
+          </div>
+        )}
         {recommendedRegions.map((region) => (
           <article className="region-card" key={region.id}>
             <div
@@ -481,6 +494,7 @@ export function RegionDetail() {
   const livingData = useRegionLivingData(region);
   const [tab, setTab] = useState("숙소");
   const [duration, setDuration] = useState<StayLength>("1개월");
+  const [liked, setLiked] = useState(false);
   const budget = getBudget(region, duration);
   const total = budget.reduce((sum, item) => sum + item.monthly, 0);
   return (
@@ -497,8 +511,16 @@ export function RegionDetail() {
               <ChevronRight className="back-rotate" size={19} />
             </button>
             <span>
-              <button className="icon-button" aria-label="좋아요">
-                <Heart size={17} />
+              <button
+                className="icon-button"
+                onClick={() => setLiked(!liked)}
+                aria-label="좋아요"
+              >
+                <Heart
+                  size={17}
+                  fill={liked ? "currentColor" : "none"}
+                  color={liked ? "#e74c3c" : "currentColor"}
+                />
               </button>
               <button
                 className="icon-button"
@@ -699,6 +721,7 @@ export function Itinerary() {
 export function MapPage() {
   const [preset, setPreset] = useState("전체");
   const [selectedMarker, setSelectedMarker] = useState<number | null>(null);
+  const [showFilterHelp, setShowFilterHelp] = useState(false);
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
@@ -767,10 +790,20 @@ export function MapPage() {
       <PageMotion className="page map-page">
         <header className="title-header">
           <h1>강릉 생활 인프라 지도</h1>
-          <button className="icon-button" aria-label="지도 필터">
+          <button
+            className="icon-button"
+            onClick={() => setShowFilterHelp(!showFilterHelp)}
+            aria-label="지도 필터"
+          >
             <Filter size={18} />
           </button>
         </header>
+        {showFilterHelp && (
+          <div className="toast-notification">
+            <p>🔍 필터 팁</p>
+            <small>탭을 선택해서 카테고리별 장소를 확인하세요!</small>
+          </div>
+        )}
         <div className="map-chips">
           {tabLabels.map((label) => (
             <button
@@ -841,6 +874,8 @@ const posts = [
 ];
 export function Community() {
   const [category, setCategory] = useState("전체");
+  const [reportedPost, setReportedPost] = useState<string | null>(null);
+  const [newPostMessage, setNewPostMessage] = useState(false);
   const categories = ["전체", "질문/답변", "정보 공유", "모임/행사"];
   const filteredPosts = filterByCategory(posts, category, "category");
   return (
@@ -867,7 +902,21 @@ export function Community() {
                   <b>{post.author}</b>
                   <small>{post.time}</small>
                 </div>
-                <MoreHorizontal size={19} />
+                <button
+                  className="icon-button"
+                  style={{ width: "auto", padding: "0", background: "transparent" }}
+                  onClick={() => setReportedPost(reportedPost === post.title ? null : post.title)}
+                  aria-label="더보기"
+                >
+                  <MoreHorizontal size={19} />
+                </button>
+                {reportedPost === post.title && (
+                  <div className="post-menu">
+                    <button onClick={() => { setReportedPost(null); }}>📌 저장</button>
+                    <button onClick={() => { setReportedPost(null); }}>📤 공유</button>
+                    <button onClick={() => { setReportedPost(null); }}>⚠️ 신고</button>
+                  </div>
+                )}
               </header>
               <h3>{post.title}</h3>
               <div className="post-body">
@@ -885,9 +934,19 @@ export function Community() {
             </article>
           ))}
         </div>
-        <button className="fab" aria-label="새 글 쓰기">
+        <button
+          className="fab"
+          aria-label="새 글 쓰기"
+          onClick={() => setNewPostMessage(!newPostMessage)}
+        >
           <Plus size={23} />
         </button>
+        {newPostMessage && (
+          <div className="toast-notification">
+            <p>✏️ 새 글 작성 기능</p>
+            <small>곧 출시될 예정입니다!</small>
+          </div>
+        )}
       </PageMotion>
     </AppFrame>
   );
@@ -909,7 +968,11 @@ export function MyPage() {
     <AppFrame>
       <PageMotion className="mypage">
         <header className="profile-header">
-          <button className="icon-button" aria-label="설정">
+          <button
+            className="icon-button"
+            onClick={() => setActiveTab(activeTab === "설정" ? null : "설정")}
+            aria-label="설정"
+          >
             <Settings size={18} />
           </button>
           <div className="profile-avatar">

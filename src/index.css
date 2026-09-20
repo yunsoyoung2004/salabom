@@ -119,6 +119,16 @@ small { font-size: 10px; color: #7c817d; }
 .logout-btn:hover { background: #ffcdd2; }
 .empty-content { text-align: center; padding: 12px; color: #8f9690; font-size: 9px; }
 
+.toast-notification { position: fixed; bottom: 100px; left: var(--page-gutter); right: var(--page-gutter); background: #323932; color: #fff; padding: 10px 12px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 50; animation: slideUp 0.3s ease; }
+.toast-notification p { margin: 0; font-size: 10px; font-weight: 600; }
+.toast-notification small { display: block; font-size: 8px; color: #b0b5b0; margin-top: 2px; }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.post-menu { position: absolute; right: 0; top: 100%; background: #fff; border: 1px solid #e8ece8; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 10; min-width: 100px; }
+.post-menu button { display: block; width: 100%; padding: 8px 12px; background: transparent; border: none; text-align: left; font-size: 9px; color: #5c655e; cursor: pointer; border-bottom: 1px solid #f0f2f0; transition: background 0.2s; }
+.post-menu button:last-child { border-bottom: none; }
+.post-menu button:hover { background: #f5f8f5; }
+
 /* Keep the reference's compact density while preserving readable mobile text. */
 .nav-item { font-size: 10px; }
 .score { font-size: 9px; }.region-summary strong { font-size: 13px; }
