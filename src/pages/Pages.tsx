@@ -1017,11 +1017,41 @@ const posts = [
   },
 ];
 export function Community() {
+  const [postList, setPostList] = useState(posts);
   const [category, setCategory] = useState("전체");
   const [reportedPost, setReportedPost] = useState<string | null>(null);
-  const [newPostMessage, setNewPostMessage] = useState(false);
+  const [showNewPostForm, setShowNewPostForm] = useState(false);
+  const [likedPosts, setLikedPosts] = useState<string[]>([]);
+  const [newPost, setNewPost] = useState({ title: "", body: "", category: "정보 공유" });
   const categories = ["전체", "질문/답변", "정보 공유", "모임/행사"];
-  const filteredPosts = filterByCategory(posts, category, "category");
+  const filteredPosts = filterByCategory(postList, category, "category");
+
+  const handleAddPost = () => {
+    if (!newPost.title.trim() || !newPost.body.trim()) return;
+
+    const createdPost = {
+      author: "나",
+      time: "지금",
+      title: newPost.title,
+      body: newPost.body,
+      image: images.beach,
+      likes: 0,
+      comments: 0,
+      category: newPost.category,
+    };
+
+    setPostList([createdPost, ...postList]);
+    setNewPost({ title: "", body: "", category: "정보 공유" });
+    setShowNewPostForm(false);
+  };
+
+  const toggleLike = (title: string) => {
+    setLikedPosts((prev) =>
+      prev.includes(title)
+        ? prev.filter((t) => t !== title)
+        : [...prev, title]
+    );
+  };
   return (
     <AppFrame>
       <PageMotion className="page community">
@@ -1069,7 +1099,13 @@ export function Community() {
               </div>
               <footer>
                 <span>
-                  <ThumbsUp size={15} /> {post.likes}
+                  <button
+                    style={{ background: "none", border: "none", cursor: "pointer", display: "flex", gap: "3px", alignItems: "center", color: likedPosts.includes(post.title) ? "#e74c3c" : "currentColor" }}
+                    onClick={() => toggleLike(post.title)}
+                  >
+                    <ThumbsUp size={15} fill={likedPosts.includes(post.title) ? "currentColor" : "none"} />
+                    {post.likes + (likedPosts.includes(post.title) ? 1 : 0)}
+                  </button>
                 </span>
                 <span>
                   <MessageCircle size={15} /> {post.comments}
@@ -1081,14 +1117,41 @@ export function Community() {
         <button
           className="fab"
           aria-label="새 글 쓰기"
-          onClick={() => setNewPostMessage(!newPostMessage)}
+          onClick={() => setShowNewPostForm(!showNewPostForm)}
         >
           <Plus size={23} />
         </button>
-        {newPostMessage && (
-          <div className="toast-notification">
-            <p>✏️ 새 글 작성 기능</p>
-            <small>곧 출시될 예정입니다!</small>
+        {showNewPostForm && (
+          <div className="new-post-modal">
+            <div className="new-post-form">
+              <h3>새 글 작성</h3>
+              <select
+                value={newPost.category}
+                onChange={(e) => setNewPost({ ...newPost, category: e.target.value })}
+                className="post-category-select"
+              >
+                <option value="질문/답변">질문/답변</option>
+                <option value="정보 공유">정보 공유</option>
+                <option value="모임/행사">모임/행사</option>
+              </select>
+              <input
+                type="text"
+                placeholder="제목을 입력하세요"
+                value={newPost.title}
+                onChange={(e) => setNewPost({ ...newPost, title: e.target.value })}
+                className="post-title-input"
+              />
+              <textarea
+                placeholder="내용을 입력하세요"
+                value={newPost.body}
+                onChange={(e) => setNewPost({ ...newPost, body: e.target.value })}
+                className="post-body-textarea"
+              />
+              <div className="post-form-actions">
+                <button onClick={handleAddPost} className="post-submit-btn">작성하기</button>
+                <button onClick={() => setShowNewPostForm(false)} className="post-cancel-btn">취소</button>
+              </div>
+            </div>
           </div>
         )}
       </PageMotion>

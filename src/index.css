@@ -129,6 +129,18 @@ small { font-size: 10px; color: #7c817d; }
 .post-menu button:last-child { border-bottom: none; }
 .post-menu button:hover { background: #f5f8f5; }
 
+.new-post-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: grid; place-items: center; z-index: 100; }
+.new-post-form { background: #fff; border-radius: 12px; padding: 20px; max-width: 500px; width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.3); }
+.new-post-form h3 { margin: 0 0 14px; font-size: 14px; color: #1c1c1c; }
+.post-category-select { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #e8ece8; border-radius: 6px; font-size: 10px; }
+.post-title-input { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #e8ece8; border-radius: 6px; font-size: 11px; font-family: inherit; }
+.post-body-textarea { width: 100%; padding: 10px; margin-bottom: 14px; border: 1px solid #e8ece8; border-radius: 6px; font-size: 10px; font-family: inherit; min-height: 100px; resize: vertical; }
+.post-form-actions { display: flex; gap: 8px; }
+.post-submit-btn { flex: 1; padding: 10px; background: #3ba951; color: #fff; border: none; border-radius: 6px; font-size: 10px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+.post-submit-btn:hover { background: #2e8a41; }
+.post-cancel-btn { flex: 1; padding: 10px; background: #f0f2f0; color: #5c655e; border: none; border-radius: 6px; font-size: 10px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+.post-cancel-btn:hover { background: #e8ece8; }
+
 /* Keep the reference's compact density while preserving readable mobile text. */
 .nav-item { font-size: 10px; }
 .score { font-size: 9px; }.region-summary strong { font-size: 13px; }
