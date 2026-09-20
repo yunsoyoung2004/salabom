@@ -857,7 +857,7 @@ export function Community() {
 
 export function MyPage() {
   const { profile, savedIds } = useApp();
-  const [showSaved, setShowSaved] = useState(false);
+  const [activeTab, setActiveTab] = useState<string | null>(null);
   const menu = [
     ["나의 일정", CalendarDays],
     ["찜한 장소", Heart],
@@ -866,6 +866,7 @@ export function MyPage() {
     ["설정", Settings],
   ];
   const saved = regions.filter((region) => savedIds.includes(region.id));
+
   return (
     <AppFrame>
       <PageMotion className="mypage">
@@ -888,34 +889,119 @@ export function MyPage() {
             <StatCard label="방문한 장소" value="5" />
             <StatCard label="작성한 일기" value="18" />
           </div>
-          {showSaved && (
-            <div className="saved-regions">
-              {saved.length ? (
-                saved.map((region) => (
-                  <div key={region.id}>
-                    <img src={region.heroImage} alt="" />
-                    <span>{region.city}</span>
-                  </div>
-                ))
-              ) : (
-                <p>아직 찜한 지역이 없어요.</p>
-              )}
-            </div>
-          )}
           <div className="menu-list">
             {menu.map(([label, Icon]) => {
               const MenuIcon = Icon as typeof Settings;
+              const isActive = activeTab === label;
               return (
-                <button
-                  onClick={() =>
-                    label === "찜한 장소" && setShowSaved(!showSaved)
-                  }
-                  key={label as string}
-                >
-                  <MenuIcon size={17} />
-                  <span>{label as string}</span>
-                  <ChevronRight size={17} />
-                </button>
+                <div key={label as string}>
+                  <button
+                    onClick={() => setActiveTab(isActive ? null : (label as string))}
+                    className={isActive ? "active" : ""}
+                  >
+                    <MenuIcon size={17} />
+                    <span>{label as string}</span>
+                    <ChevronRight size={17} />
+                  </button>
+                  {isActive && (
+                    <div className="menu-content">
+                      {label === "나의 일정" && (
+                        <div className="content-section">
+                          <div className="schedule-item">
+                            <h4>강릉 12일 체류 일정</h4>
+                            <p>📅 2025년 9월 8일 - 9월 20일</p>
+                            <p>📍 숙소: 강릉 해변 펜션</p>
+                            <div className="schedule-activities">
+                              <div className="activity">✓ 정동진 일출 감상</div>
+                              <div className="activity">✓ 경포대 해변 산책</div>
+                              <div className="activity">✓ 강릉 커피 투어</div>
+                              <div className="activity">✓ 오죽헌 방문</div>
+                              <div className="activity">✓ 강릉 야경 촬영</div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      {label === "찜한 장소" && (
+                        <div className="content-section">
+                          {saved.length ? (
+                            <div className="saved-list">
+                              {saved.map((region) => (
+                                <div key={region.id} className="saved-item">
+                                  <img src={region.heroImage} alt={region.city} />
+                                  <div>
+                                    <h4>{region.city}</h4>
+                                    <p>{region.tags.slice(0, 2).join(", ")}</p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="empty-content">아직 찜한 지역이 없어요.</p>
+                          )}
+                        </div>
+                      )}
+                      {label === "나의 리뷰" && (
+                        <div className="content-section">
+                          <div className="review-item">
+                            <h4>경포대 해변 - 훌륭한 일출 명소</h4>
+                            <div className="rating">⭐⭐⭐⭐⭐</div>
+                            <p>정동진보다 덜 붐비고 조용한데 정말 좋았습니다. 아침 일찍 가시면 한적하게 일출을 감상할 수 있어요.</p>
+                            <small>2025년 9월 15일</small>
+                          </div>
+                          <div className="review-item">
+                            <h4>강릉 커피 거리 - 커피의 성지</h4>
+                            <div className="rating">⭐⭐⭐⭐</div>
+                            <p>정말 커피 맛집이 많아요. 워케이션 하기에 최고의 환경입니다.</p>
+                            <small>2025년 9월 12일</small>
+                          </div>
+                        </div>
+                      )}
+                      {label === "생활비 정산" && (
+                        <div className="content-section">
+                          <div className="budget-summary">
+                            <div className="budget-item">
+                              <span>🏨 숙소</span>
+                              <span className="amount">₩1,200,000</span>
+                            </div>
+                            <div className="budget-item">
+                              <span>🍽️ 식사</span>
+                              <span className="amount">₩450,000</span>
+                            </div>
+                            <div className="budget-item">
+                              <span>🚗 이동</span>
+                              <span className="amount">₩180,000</span>
+                            </div>
+                            <div className="budget-item">
+                              <span>🎯 액티비티</span>
+                              <span className="amount">₩320,000</span>
+                            </div>
+                            <div className="budget-total">
+                              <strong>총 예상 생활비</strong>
+                              <strong className="total">₩2,150,000</strong>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      {label === "설정" && (
+                        <div className="content-section">
+                          <div className="setting-item">
+                            <label>닉네임</label>
+                            <input type="text" value={profile.nickname} disabled />
+                          </div>
+                          <div className="setting-item">
+                            <label>라이프스타일</label>
+                            <input type="text" value={profile.lifestyleType} disabled />
+                          </div>
+                          <div className="setting-item">
+                            <label>관심사</label>
+                            <input type="text" value={profile.interests.join(", ")} disabled />
+                          </div>
+                          <button className="logout-btn">로그아웃</button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>

@@ -73,7 +73,36 @@ small { font-size: 10px; color: #7c817d; }
 
 .community-tabs { margin: 6px 0 7px; }.community-tabs button { font-size: 8px; }.post-list { display: grid; gap: 7px; }.post-card { padding: 10px; border-bottom: 1px solid #edf0ed; background: #fff; }.post-card header { display: flex; align-items: center; gap: 6px; }.post-card header > svg { margin-left: auto; color: #889089; }.avatar { display: grid; place-items: center; width: 24px; height: 24px; color: #54a464; border-radius: 50%; background: #e8f3e9; }.post-card header div:nth-child(2) { display: grid; gap: 1px; }.post-card header b { font-size: 8px; }.post-card header small { font-size: 7px; }.post-card h3 { margin: 9px 0 5px; font-size: 11px; }.post-body { display: flex; gap: 7px; justify-content: space-between; }.post-body p { max-width: 240px; font-size: 8px; }.post-body img { width: 55px; height: 44px; border-radius: 4px; }.post-card footer { display: flex; gap: 10px; margin-top: 8px; color: #818882; }.post-card footer span { display: flex; gap: 3px; align-items: center; font-size: 8px; }.fab { position: absolute; right: 15px; bottom: 84px; display: grid; place-items: center; width: 39px; height: 39px; color: #fff; border-radius: 50%; background: #3ba951; box-shadow: 0 5px 12px rgba(43,143,65,.32); }
 
-.mypage { min-height: 100%; background: #f6f8f6; }.profile-header { position: relative; min-height: 101px; display: flex; align-items: center; gap: 10px; padding: 28px 15px 15px; color: #fff; border-radius: 0 0 13px 13px; background: linear-gradient(120deg, #3aa253, #76b36d); }.profile-header > .icon-button { position: absolute; top: 10px; right: 11px; color: #fff; background: transparent; }.profile-avatar { width: 42px; height: 42px; overflow: hidden; border: 2px solid rgba(255,255,255,.65); border-radius: 50%; }.profile-avatar img { height: 100%; }.profile-header h1 { margin-bottom: 3px; font-size: 13px; }.profile-header p { color: rgba(255,255,255,.9); font-size: 8px; }.diary { margin: 8px 8px 0; padding: 12px 10px; border-radius: 9px; background: #fff; }.diary h2 { margin-bottom: 9px; font-size: 10px; }.diary-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }.diary-stats .stat-card { min-height: 57px; }.diary-stats strong { font-size: 16px; }.menu-list { margin-top: 8px; }.menu-list button { width: 100%; min-height: 35px; display: flex; align-items: center; gap: 8px; padding: 0 3px; color: #5c655e; border-bottom: 1px solid #edf0ed; background: transparent; text-align: left; font-size: 9px; }.menu-list button span { flex: 1; }.menu-list button > svg:last-child { color: #b5bbb5; }
+.mypage { min-height: 100%; background: #f6f8f6; }.profile-header { position: relative; min-height: 101px; display: flex; align-items: center; gap: 10px; padding: 28px 15px 15px; color: #fff; border-radius: 0 0 13px 13px; background: linear-gradient(120deg, #3aa253, #76b36d); }.profile-header > .icon-button { position: absolute; top: 10px; right: 11px; color: #fff; background: transparent; }.profile-avatar { width: 42px; height: 42px; overflow: hidden; border: 2px solid rgba(255,255,255,.65); border-radius: 50%; }.profile-avatar img { height: 100%; }.profile-header h1 { margin-bottom: 3px; font-size: 13px; }.profile-header p { color: rgba(255,255,255,.9); font-size: 8px; }.diary { margin: 8px 8px 0; padding: 12px 10px; border-radius: 9px; background: #fff; }.diary h2 { margin-bottom: 9px; font-size: 10px; }.diary-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }.diary-stats .stat-card { min-height: 57px; }.diary-stats strong { font-size: 16px; }.menu-list { margin-top: 8px; }.menu-list button { width: 100%; min-height: 35px; display: flex; align-items: center; gap: 8px; padding: 0 3px; color: #5c655e; border-bottom: 1px solid #edf0ed; background: transparent; text-align: left; font-size: 9px; }.menu-list button span { flex: 1; }.menu-list button > svg:last-child { color: #b5bbb5; transition: transform 0.2s; }.menu-list button.active > svg:last-child { color: #3ba951; transform: rotate(90deg); }.menu-content { background: #f9fbf9; border-left: 3px solid #3ba951; padding: 12px; margin: 8px 0; border-radius: 0 8px 8px 0; }
+.content-section { display: grid; gap: 10px; }
+.schedule-item { background: #fff; padding: 10px; border-radius: 7px; border: 1px solid #e8ece8; }
+.schedule-item h4 { margin: 0 0 6px; font-size: 11px; font-weight: 600; }
+.schedule-item p { margin: 4px 0; font-size: 9px; color: #707670; }
+.schedule-activities { display: grid; gap: 4px; margin-top: 8px; }
+.activity { font-size: 9px; color: #3ba951; font-weight: 500; }
+.saved-list { display: grid; gap: 8px; }
+.saved-item { display: flex; gap: 8px; background: #fff; padding: 8px; border-radius: 7px; border: 1px solid #e8ece8; align-items: center; }
+.saved-item img { width: 60px; height: 50px; border-radius: 5px; object-fit: cover; flex-shrink: 0; }
+.saved-item h4 { margin: 0 0 2px; font-size: 10px; font-weight: 600; }
+.saved-item p { margin: 0; font-size: 8px; color: #707670; }
+.review-item { background: #fff; padding: 10px; border-radius: 7px; border: 1px solid #e8ece8; margin-bottom: 8px; }
+.review-item h4 { margin: 0 0 4px; font-size: 10px; font-weight: 600; }
+.review-item .rating { font-size: 12px; margin-bottom: 4px; }
+.review-item p { margin: 4px 0; font-size: 9px; color: #707670; line-height: 1.4; }
+.review-item small { display: block; font-size: 8px; color: #a0a7a1; margin-top: 4px; }
+.budget-summary { background: #fff; padding: 10px; border-radius: 7px; border: 1px solid #e8ece8; }
+.budget-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #f0f2f0; font-size: 9px; }
+.budget-item span:first-child { color: #5c655e; }
+.amount { font-weight: 600; color: #1c1c1c; }
+.budget-total { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-top: 2px solid #3ba951; margin-top: 4px; }
+.budget-total strong { font-size: 10px; }
+.total { color: #3ba951; font-size: 11px; }
+.setting-item { margin-bottom: 8px; }
+.setting-item label { display: block; font-size: 8px; font-weight: 600; color: #5c655e; margin-bottom: 3px; }
+.setting-item input { width: 100%; padding: 6px; border: 1px solid #e8ece8; border-radius: 5px; font-size: 9px; background: #f9fbf9; }
+.logout-btn { width: 100%; padding: 8px; background: #ffebee; color: #c62828; border: 1px solid #ef5350; border-radius: 5px; font-size: 9px; font-weight: 600; margin-top: 8px; cursor: pointer; transition: background 0.2s; }
+.logout-btn:hover { background: #ffcdd2; }
+.empty-content { text-align: center; padding: 12px; color: #8f9690; font-size: 9px; }
 
 /* Keep the reference's compact density while preserving readable mobile text. */
 .nav-item { font-size: 10px; }
@@ -88,6 +117,15 @@ small { font-size: 10px; color: #7c817d; }
 
 .detail-hero { height: 142px; }.detail-hero-controls { top: 12px; left: 12px; right: 12px; }.detail-content { padding: 16px var(--page-gutter) 0; }.detail-content .chips { margin: 9px 0 17px; }.stats-grid { gap: 6px; }.stat-card { min-height: 52px; padding: 7px 3px; }.detail-tabs { margin-top: 18px; padding: 0 var(--page-gutter); }.detail-stays { padding: 14px var(--page-gutter); }.section-title { margin-bottom: 10px; }.stay-list { gap: 14px; margin-top: 14px; }.stay-image { height: 132px; }.stay-info { padding: 11px 12px 12px; }
 .profile-header { min-height: 112px; gap: 12px; padding: 31px var(--page-gutter) 18px; border-radius: 0 0 16px 16px; }.profile-header > .icon-button { top: 12px; right: 14px; }.profile-avatar { width: 46px; height: 46px; }.diary { margin: 14px var(--page-gutter) 0; padding: 16px; border-radius: 12px; }.diary h2 { margin-bottom: 12px; }.diary-stats { gap: 8px; }.diary-stats .stat-card { min-height: 62px; }.menu-list { margin-top: 12px; }.menu-list button { gap: 10px; padding: 0 4px; }
+.menu-content { padding: 14px; margin: 10px 0; }
+.schedule-item { padding: 12px; }
+.schedule-item h4 { font-size: 12px; }
+.saved-item { gap: 10px; padding: 10px; }
+.saved-item img { width: 70px; height: 60px; }
+.review-item { padding: 12px; margin-bottom: 10px; }
+.review-item h4 { font-size: 12px; }
+.budget-item { font-size: 11px; padding: 8px 0; }
+.setting-item input { font-size: 11px; }
 
 /* No product information should rely on unreadable microtype. */
 small, .chip, .score, .nav-item, .stepper b, .stepper span, .quiz-top > span { font-size: 11px; }
