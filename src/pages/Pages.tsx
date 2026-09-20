@@ -501,7 +501,7 @@ export function RegionDetail() {
   const mapRef = useRef<any>(null);
 
   useEffect(() => {
-    if (!mapContainer.current || mapRef.current) return;
+    if (!mapContainer.current || mapRef.current || !(window as any).kakao) return;
 
     const regionCoords: Record<string, [number, number]> = {
       gangneung: [37.2411, 129.0538],
@@ -781,7 +781,7 @@ export function MapPage() {
     [...livePharmacies.slice(0, 2), ...liveLibraries.slice(0, 2), ...liveTourism.slice(0, 1)];
 
   useEffect(() => {
-    if (!mapContainer.current) return;
+    if (!mapContainer.current || !(window as any).kakao) return;
 
     const container = mapContainer.current;
     const options = {
