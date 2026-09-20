@@ -489,12 +489,12 @@ export function Compare() {
 export function RegionDetail() {
   const navigate = useNavigate();
   const { id = "gangneung" } = useParams();
-  const { savedIds, toggleSaved, profile } = useApp();
+  const { savedIds, toggleSaved, profile, likedIds, toggleLiked } = useApp();
   const region = regions.find((item) => item.id === id) ?? regions[0];
   const livingData = useRegionLivingData(region);
   const [tab, setTab] = useState("숙소");
   const [duration, setDuration] = useState<StayLength>("1개월");
-  const [liked, setLiked] = useState(false);
+  const liked = likedIds.includes(region.id);
   const budget = getBudget(region, duration);
   const total = budget.reduce((sum, item) => sum + item.monthly, 0);
   return (
@@ -513,7 +513,7 @@ export function RegionDetail() {
             <span>
               <button
                 className="icon-button"
-                onClick={() => setLiked(!liked)}
+                onClick={() => toggleLiked(region.id)}
                 aria-label="좋아요"
               >
                 <Heart
