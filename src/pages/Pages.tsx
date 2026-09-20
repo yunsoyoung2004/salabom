@@ -1,5 +1,6 @@
 import { ActivityValue, HousingValue, SuitabilityValue, RegionalMetrics, LocalPrograms } from '../components/RegionalData';
 import { useState } from "react";
+import { getRecommendedRegions, filterByCategory } from '../utils/recommendationEngine';
 import {
   Bell,
   Bookmark,
@@ -256,6 +257,7 @@ export function Home() {
   const { profile } = useApp();
   const [selected, setSelected] = useState<string[]>([]);
   const [explanation, setExplanation] = useState<string | null>(null);
+  const recommendedRegions = getRecommendedRegions(profile, regions, 3);
   const toggle = (id: string) =>
     setSelected((items) =>
       items.includes(id)
@@ -272,11 +274,11 @@ export function Home() {
             <h1>
               {profile.nickname} 님을 위한 체류 추천 <span>👋</span>
             </h1>
-            <p>AI가 분석한 당신의 생활 스타일에 맞는 지역이에요</p>
+            <p>AI가 분석한 당신의 {profile.lifestyleType} 스타일에 맞는 지역이에요</p>
           </div>
           <Bell size={18} />
         </header>
-        {regions.slice(0, 3).map((region) => (
+        {recommendedRegions.map((region) => (
           <article className="region-card" key={region.id}>
             <div
               role="button"
@@ -654,24 +656,26 @@ export function Accommodation() {
 }
 
 export function Itinerary() {
+  const [duration, setDuration] = useState("3일");
   const livingData = useRegionLivingData(regions[0]);
   const livePlaces = livingData?.tourism.data?.slice(0, 3) ?? [];
   const weatherNote = livingData?.weather.source === "live" && livingData.weather.data?.precipitation !== "0" ? "강수 예보에 맞춰 실내 문화시설과 도서관을 중심으로 구성했어요." : "공공데이터 기반 지역 장소와 프로그램을 중심으로 구성했어요.";
+  const durations = ["3일", "1주", "2주", "3주", "1개월"];
   return (
     <AppFrame>
       <PageMotion className="page itinerary">
         <header className="title-header no-icon">
           <div>
             <h1>AI가 만든 생활 플랜</h1>
-            <p>{weatherNote}</p>
+            <p>{duration} 체류 · {weatherNote}</p>
           </div>
         </header>
         <div className="tabs schedule-tabs">
-          <button className="tab-active">3일</button>
-          <button>1주</button>
-          <button>2주</button>
-          <button>3주</button>
-          <button>1개월</button>
+          {durations.map((d) => (
+            <button key={d} className={d === duration ? "tab-active" : ""} onClick={() => setDuration(d)}>
+              {d}
+            </button>
+          ))}
         </div>
         <details><summary>지역 체험 · 행사로 생활 플랜 채우기</summary><LocalPrograms data={livingData} activeOnly /></details><div className="timeline">
           {(livePlaces.length ? livePlaces.map((place: any, index: number) => ({ ...itinerary[index], title: place.name, text: place.address ?? place.category, image: place.image || itinerary[index].image })) : itinerary).map((item) => (
@@ -802,6 +806,9 @@ const posts = [
   },
 ];
 export function Community() {
+  const [category, setCategory] = useState("전체");
+  const categories = ["전체", "질문/답변", "정보 공유", "모임/행사"];
+  const filteredPosts = filterByCategory(posts, category, "category");
   return (
     <AppFrame>
       <PageMotion className="page community">
@@ -809,13 +816,14 @@ export function Community() {
           <h1>강릉에서 살아본 이야기</h1>
         </header>
         <div className="tabs community-tabs">
-          <button className="tab-active">전체</button>
-          <button>질문/답변</button>
-          <button>정보 공유</button>
-          <button>모임/행사</button>
+          {categories.map((cat) => (
+            <button key={cat} className={cat === category ? "tab-active" : ""} onClick={() => setCategory(cat)}>
+              {cat}
+            </button>
+          ))}
         </div>
         <div className="post-list">
-          {posts.map((post) => (
+          {filteredPosts.map((post) => (
             <article className="post-card" key={post.title}>
               <header>
                 <div className="avatar">
