@@ -501,40 +501,54 @@ export function RegionDetail() {
   const mapRef = useRef<any>(null);
 
   useEffect(() => {
-    if (!mapContainer.current || mapRef.current || !(window as any).kakao) return;
+    if (!mapContainer.current || mapRef.current) return;
 
-    const regionCoords: Record<string, [number, number]> = {
-      gangneung: [37.2411, 129.0538],
-      sokcho: [38.2075, 128.5920],
-      jeonju: [35.8242, 127.1477],
-      gwangju: [35.1595, 126.8526],
-      busan: [35.1796, 129.0756],
+    const initMap = async () => {
+      await (window as any).kakaoReady;
+
+      const regionCoords: Record<string, [number, number]> = {
+        gangneung: [37.2411, 129.0538],
+        sokcho: [38.2075, 128.5920],
+        jeonju: [35.8242, 127.1477],
+        gwangju: [35.1595, 126.8526],
+        busan: [35.1796, 129.0756],
+      };
+
+      const coords = regionCoords[region.id] || [37.2411, 129.0538];
+
+      const container = mapContainer.current;
+      if (!container) return;
+
+      const options = {
+        center: new (window as any).kakao.maps.LatLng(coords[0], coords[1]),
+        level: 4,
+      };
+
+      const map = new (window as any).kakao.maps.Map(container, options);
+      mapRef.current = map;
+
+      const markerPosition = new (window as any).kakao.maps.LatLng(coords[0], coords[1]);
+
+      const marker = new (window as any).kakao.maps.Marker({
+        position: markerPosition,
+      });
+
+      marker.setMap(map);
+
+      const infowindow = new (window as any).kakao.maps.InfoWindow({
+        content: `<div style="padding:8px;font-size:12px;"><strong>${region.city}</strong><br/>${region.province}</div>`,
+      });
+
+      infowindow.open(map, marker);
     };
 
-    const coords = regionCoords[region.id] || [37.2411, 129.0538];
+    initMap();
 
-    const container = mapContainer.current;
-    const options = {
-      center: new (window as any).kakao.maps.LatLng(coords[0], coords[1]),
-      level: 4,
+    return () => {
+      if (mapRef.current) {
+        mapRef.current = null;
+      }
     };
-
-    const map = new (window as any).kakao.maps.Map(container, options);
-    mapRef.current = map;
-
-    const markerPosition = new (window as any).kakao.maps.LatLng(coords[0], coords[1]);
-
-    const marker = new (window as any).kakao.maps.Marker({
-      position: markerPosition,
-    });
-
-    marker.setMap(map);
-
-    const infowindow = new (window as any).kakao.maps.InfoWindow({
-      content: `<div style="padding:8px;font-size:12px;"><strong>${region.city}</strong><br/>${region.province}</div>`,
-    });
-
-    infowindow.open(map, marker);
   }, [region]);
   return (
     <AppFrame>
@@ -781,51 +795,65 @@ export function MapPage() {
     [...livePharmacies.slice(0, 2), ...liveLibraries.slice(0, 2), ...liveTourism.slice(0, 1)];
 
   useEffect(() => {
-    if (!mapContainer.current || !(window as any).kakao) return;
+    if (!mapContainer.current) return;
 
-    const container = mapContainer.current;
-    const options = {
-      center: new (window as any).kakao.maps.LatLng(37.2411, 129.0538),
-      level: 5,
+    const initMap = async () => {
+      await (window as any).kakaoReady;
+
+      const container = mapContainer.current;
+      if (!container) return;
+
+      const options = {
+        center: new (window as any).kakao.maps.LatLng(37.2411, 129.0538),
+        level: 5,
+      };
+
+      const map = new (window as any).kakao.maps.Map(container, options);
+      mapRef.current = map;
+
+      markersRef.current.forEach((marker) => marker.setMap(null));
+      markersRef.current = [];
+
+      renderedPlaces.forEach((place: any, index: number) => {
+        if (!place.latitude || !place.longitude) return;
+
+        const markerPosition = new (window as any).kakao.maps.LatLng(
+          place.latitude,
+          place.longitude
+        );
+
+        const markerImage = new (window as any).kakao.maps.MarkerImage(
+          `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='40' viewBox='0 0 32 40'%3E%3Cpath fill='%2335a55a' d='M16 0C9.4 0 4 5.4 4 12c0 8 12 28 12 28s12-20 12-28c0-6.6-5.4-12-12-12z'/%3E%3Ctext x='16' y='16' text-anchor='middle' dy='.3em' font-size='12' font-weight='bold' fill='white'%3E${index + 1}%3C/text%3E%3C/svg%3E`,
+          new (window as any).kakao.maps.Size(32, 40)
+        );
+
+        const marker = new (window as any).kakao.maps.Marker({
+          position: markerPosition,
+          image: markerImage,
+          title: place.name,
+        });
+
+        const infowindow = new (window as any).kakao.maps.InfoWindow({
+          content: `<div style="padding:8px;font-size:12px;"><strong>${place.name}</strong><br/>${place.address || '주소 정보 없음'}<br/>${place.phone ? `📞 ${place.phone}` : ''}</div>`,
+        });
+
+        marker.setMap(map);
+        markersRef.current.push(marker);
+
+        (window as any).kakao.maps.event.addListener(marker, "click", () => {
+          infowindow.open(map, marker);
+          setSelectedMarker(index);
+        });
+      });
     };
 
-    const map = new (window as any).kakao.maps.Map(container, options);
-    mapRef.current = map;
+    initMap();
 
-    markersRef.current.forEach((marker) => marker.setMap(null));
-    markersRef.current = [];
-
-    renderedPlaces.forEach((place: any, index: number) => {
-      if (!place.latitude || !place.longitude) return;
-
-      const markerPosition = new (window as any).kakao.maps.LatLng(
-        place.latitude,
-        place.longitude
-      );
-
-      const markerImage = new (window as any).kakao.maps.MarkerImage(
-        `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='40' viewBox='0 0 32 40'%3E%3Cpath fill='%2335a55a' d='M16 0C9.4 0 4 5.4 4 12c0 8 12 28 12 28s12-20 12-28c0-6.6-5.4-12-12-12z'/%3E%3Ctext x='16' y='16' text-anchor='middle' dy='.3em' font-size='12' font-weight='bold' fill='white'%3E${index + 1}%3C/text%3E%3C/svg%3E`,
-        new (window as any).kakao.maps.Size(32, 40)
-      );
-
-      const marker = new (window as any).kakao.maps.Marker({
-        position: markerPosition,
-        image: markerImage,
-        title: place.name,
-      });
-
-      const infowindow = new (window as any).kakao.maps.InfoWindow({
-        content: `<div style="padding:8px;font-size:12px;"><strong>${place.name}</strong><br/>${place.address || '주소 정보 없음'}<br/>${place.phone ? `📞 ${place.phone}` : ''}</div>`,
-      });
-
-      marker.setMap(map);
-      markersRef.current.push(marker);
-
-      (window as any).kakao.maps.event.addListener(marker, "click", () => {
-        infowindow.open(map, marker);
-        setSelectedMarker(index);
-      });
-    });
+    return () => {
+      if (mapRef.current) {
+        mapRef.current = null;
+      }
+    };
   }, [renderedPlaces]);
 
   return (
