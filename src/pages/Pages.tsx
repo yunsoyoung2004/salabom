@@ -1023,6 +1023,9 @@ export function Community() {
   const [showNewPostForm, setShowNewPostForm] = useState(false);
   const [likedPosts, setLikedPosts] = useState<string[]>([]);
   const [newPost, setNewPost] = useState({ title: "", body: "", category: "정보 공유" });
+  const [selectedPostForComment, setSelectedPostForComment] = useState<string | null>(null);
+  const [newComment, setNewComment] = useState("");
+  const [comments, setComments] = useState<Record<string, string[]>>({});
   const categories = ["전체", "질문/답변", "정보 공유", "모임/행사"];
   const filteredPosts = filterByCategory(postList, category, "category");
 
@@ -1052,6 +1055,16 @@ export function Community() {
         : [...prev, title]
     );
   };
+
+  const addComment = (postTitle: string) => {
+    if (!newComment.trim()) return;
+    setComments((prev) => ({
+      ...prev,
+      [postTitle]: [...(prev[postTitle] || []), newComment],
+    }));
+    setNewComment("");
+  };
+
   return (
     <AppFrame>
       <PageMotion className="page community">
@@ -1111,6 +1124,34 @@ export function Community() {
                   <MessageCircle size={15} /> {post.comments}
                 </span>
               </footer>
+              {selectedPostForComment === post.title && (
+                <div className="comment-section">
+                  <div className="comments-list">
+                    {(comments[post.title] || []).map((comment, idx) => (
+                      <div key={idx} className="comment-item">
+                        <strong>나</strong>
+                        <p>{comment}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="comment-input-form">
+                    <input
+                      type="text"
+                      placeholder="댓글을 입력하세요"
+                      value={selectedPostForComment === post.title ? newComment : ""}
+                      onChange={(e) => setNewComment(e.target.value)}
+                      onKeyPress={(e) => e.key === "Enter" && addComment(post.title)}
+                    />
+                    <button onClick={() => addComment(post.title)}>등록</button>
+                  </div>
+                </div>
+              )}
+              <button
+                className="comment-toggle-btn"
+                onClick={() => setSelectedPostForComment(selectedPostForComment === post.title ? null : post.title)}
+              >
+                {selectedPostForComment === post.title ? "댓글 닫기 ▲" : "댓글 보기 ▼"}
+              </button>
             </article>
           ))}
         </div>
